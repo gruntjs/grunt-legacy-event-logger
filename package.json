@@ -1,0 +1,29 @@
+{
+  "name": "event-logger",
+  "description": "Event logger.",
+  "version": "0.1.0",
+  "homepage": "https://github.com/gruntjs/event-logger",
+  "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
+  "repository": "gruntjs/event-logger",
+  "bugs": {
+    "url": "https://github.com/gruntjs/event-logger/issues"
+  },
+  "license": "MIT",
+  "files": [
+    "index.js"
+  ],
+  "main": "index.js",
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "event",
+    "events",
+    "log",
+    "logger",
+    "logging"
+  ]
+}
