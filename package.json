@@ -1,12 +1,12 @@
 {
-  "name": "event-logger",
-  "description": "Event logger.",
+  "name": "grunt-event-logger",
+  "description": "Event logger for Grunt legacy libs.",
   "version": "0.1.0",
-  "homepage": "https://github.com/gruntjs/event-logger",
-  "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
-  "repository": "gruntjs/event-logger",
+  "homepage": "https://github.com/gruntjs/grunt-event-logger",
+  "author": "The Grunt Team (https://github.com/gruntjs)",
+  "repository": "gruntjs/grunt-event-logger",
   "bugs": {
-    "url": "https://github.com/gruntjs/event-logger/issues"
+    "url": "https://github.com/gruntjs/grunt-event-logger/issues"
   },
   "license": "MIT",
   "files": [
