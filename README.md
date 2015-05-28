@@ -20,6 +20,48 @@ $ npm i grunt-event-logger --save
 var EventLogger = require('grunt-event-logger');
 ```
 
+## API
+
+### [EventLogger](index.js#L19)
+
+Create an instance of `EventLogger`
+
+### [.log](index.js#L33)
+
+Emit a log event.
+
+**Params**
+
+* `name` **{String}**: the name of the log event to emit
+* `message` **{String}**: Message intended to be logged to the console.
+* `returns` **{Object}** `EventLogger`: for chaining
+
+**Example**
+
+```js
+logger.log('a', 'b');
+```
+
+### [.create](index.js#L46)
+
+Create a logger with the given `name`.
+
+**Params**
+
+* `name` **{String}**: the name of the log event to emit
+* `returns` **{Object}** `EventLogger`: for chaining
+
+**Example**
+
+```js
+logger.create('warn');
+logger.warn('foo', 'this is a warning about foo.');
+
+logger.on('warn', function(message) {
+  // do stuff with message
+});
+```
+
 ## Related projects
 
 * [grunt](http://gruntjs.com/): The JavaScript Task Runner
