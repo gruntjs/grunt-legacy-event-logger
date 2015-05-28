@@ -1,5 +1,5 @@
 /*
- * event-logger <http://gruntjs.com/event-logger>
+ * grunt-event-logger <http://gruntjs.com/grunt-event-logger>
  *
  * Copyright (c) 2015, Jon Schlinkert.
  * Licensed under the MIT license.
@@ -10,42 +10,33 @@
 var util = require('util');
 var Emitter = require('events').EventEmitter;
 
-/**
- * Create an instance of `EventLogger`
- *
- * @api public
- */
-
 function EventLogger() {
   Emitter.call(this);
+  this.transforms = [];
 }
 util.inherits(EventLogger, Emitter);
 
-/**
- * Emit a log event.
- *
- * @param  {String} `name` the name of the log event to emit
- * @param  {String} `message` Message intended to be logged to the console.
- * @return {Object} `EventLogger` for chaining
- * @api public
- */
-
-EventLogger.prototype.log = function (name, message) {
-  this.emit(name, message);
+EventLogger.prototype.transform = function(fn) {
+  this.transforms.push(fn);
   return this;
 };
 
-/**
- * Create a logger with the given `name`.
- *
- * @param  {String} `name` the name of the log event to emit
- * @return {Object} `EventLogger` for chaining
- * @api public
- */
+EventLogger.prototype.emit = function () {
+  var args = [].slice.call(arguments);
+  this.transforms.forEach(function (fn) {
+    fn.apply(this, args);
+  }.bind(this));
+  return Emitter.prototype.emit.apply(this, arguments);
+};
+
+EventLogger.prototype.log = function (name, message, context) {
+  this.emit(name, message, context);
+  return this;
+};
 
 EventLogger.prototype.create = function(name) {
-  EventLogger.prototype[name] = function (message) {
-    this.log(name, message);
+  EventLogger.prototype[name] = function (message, context) {
+    this.log(name, message, context);
   };
 };
 

@@ -10,7 +10,7 @@ describe('event logger', function () {
     logger = new EventLogger();
   });
 
-  describe.only('.log()', function () {
+  describe('.log()', function () {
     it('should log an event:', function () {
       var i = 0;
       logger.on('a', function (msg) {
@@ -23,13 +23,32 @@ describe('event logger', function () {
     });
   });
 
-  describe.only('.create()', function () {
+  describe('.create()', function () {
     it('should add a custom log method to the EventLogger prototype:', function () {
       logger.create('info');
       assert.equal('info' in logger, true);
       assert.equal('foo' in logger, false);
       logger.create('foo');
       assert.equal('foo' in logger, true);
+    });
+  });
+
+  describe('.transform()', function () {
+    it('should run transform functions on events:', function () {
+      logger.transform(function (name, msg) {
+        console.log(msg);
+      });
+
+      logger.on('a', function (msg) {
+        assert.equal(msg, 'this is foo.');
+      });
+
+      logger.on('b', function (msg) {
+        assert.equal(msg, 'this is bar.');
+      });
+
+      logger.log('a', 'this is foo.', {x: 'y'});
+      logger.log('b', 'this is bar.', {x: 'y'});
     });
   });
 });
