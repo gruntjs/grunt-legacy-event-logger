@@ -1,4 +1,4 @@
-var facade = require('../lib/facade');
+var facade = require('grunt-legacy-log-facade');
 var Log = require('grunt-legacy-log').Log;
 
 function Grunt(options) {
