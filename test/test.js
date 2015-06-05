@@ -7,11 +7,11 @@ var EventLogger = require('..');
 var logger;
 
 describe('event logger', function () {
-  beforeEach(function () {
-    logger = new EventLogger();
-  });
+  describe('.log()', function () {
+    beforeEach(function () {
+      logger = new EventLogger();
+    });
 
-  describe('.base()', function () {
     it('should create a logger event with the given name:', function () {
       var i = 0;
       logger.on('a', function (msg) {
@@ -19,12 +19,16 @@ describe('event logger', function () {
         assert.equal(msg, 'this is foo.');
       });
 
-      logger.base('a', 'this is foo.');
+      logger.log('a', 'this is foo.');
       assert.equal(i, 1);
     });
   });
 
   describe('.create()', function () {
+    beforeEach(function () {
+      logger = new EventLogger();
+    });
+
     it('should add a custom log method to the EventLogger prototype:', function () {
       assert.equal('info' in logger, false);
       logger.create('info');
@@ -35,11 +39,19 @@ describe('event logger', function () {
       assert.equal('warn' in logger, true);
     });
 
-    it('should add methods to the `methods` array:', function () {
+    it('should add methods to the `methods` object:', function () {
       logger.create('a');
       logger.create('b');
       logger.create('c');
-      logger.methods.should.eql(['a', 'b', 'c']);
+      Object.keys(logger.methods).should.eql(['a', 'b', 'c']);
+    });
+
+    it('should set methods to the `methods` object:', function () {
+      logger.create('warn');
+      logger.warn = function () {
+        return 'foo';
+      };
+      assert.equal(logger.warn(), 'foo');
     });
 
     it('should emit events for custom log methods:', function () {
@@ -55,9 +67,18 @@ describe('event logger', function () {
   });
 
   describe('.mode', function () {
+    beforeEach(function () {
+      logger = new EventLogger();
+    });
+
     it('should add a logging mode:', function () {
-      logger.modes('log');
-      logger.should.have.property('log');
+      logger.modes('foo');
+      logger.should.have.property('foo');
+    });
+
+    it('should add multiple logging modes:', function () {
+      logger.modes(['a', 'b', 'c']);
+      logger.should.have.properties('a', 'b', 'c');
     });
 
     it('should chain logging methods with logging modes:', function () {
@@ -92,6 +113,10 @@ describe('event logger', function () {
   });
 
   describe('operators', function () {
+    beforeEach(function () {
+      logger = new EventLogger();
+    });
+
     it('should support custom operator functions as getters:', function () {
       var modes = [];
       logger.on('write', function(mode) {

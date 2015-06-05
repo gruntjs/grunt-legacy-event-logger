@@ -18,7 +18,7 @@ var Emitter = require('component-emitter');
 
 function EventLogger() {
   Emitter.call(this);
-  this.methods = [];
+  this.methods = {};
   this.events = [];
   this.previousMode = null;
   this.mode = null;
@@ -36,7 +36,7 @@ util.inherits(EventLogger, Emitter);
  * @api public
  */
 
-EventLogger.prototype.base = function (name/*, message*/) {
+EventLogger.prototype.log = function(name/*, message*/) {
   var event = this.events.length === 0 ? name : this.events.join('.');
   this.events = [];
   var args = [].slice.call(arguments, 1);
@@ -55,11 +55,15 @@ EventLogger.prototype.base = function (name/*, message*/) {
  */
 
 EventLogger.prototype.create = function(name) {
-  this.methods.push(name);
+  var self = this;
+  this.methods[name] = null;
   Object.defineProperty(EventLogger.prototype, name, {
     configurable: true,
     enumerable: true,
-    get: buildLogger.call(this, name)
+    get: buildLogger.call(this, name),
+    set: function (fn) {
+      self.methods[name] = fn;
+    }
   });
   return this;
 };
@@ -75,7 +79,7 @@ EventLogger.prototype.create = function(name) {
 EventLogger.prototype.modes = function(modes) {
   modes = Array.isArray(modes) ? modes : [modes];
   var self = this;
-  modes.forEach(function (mode) {
+  modes.forEach(function(mode) {
     Object.defineProperty(EventLogger.prototype, mode, {
       configurable: true,
       enumerable: true,
@@ -96,7 +100,7 @@ EventLogger.prototype.modes = function(modes) {
 
 EventLogger.prototype.operator = function(operators, getter) {
   operators = Array.isArray(operators) ? operators : [operators];
-  operators.forEach(function (operator) {
+  operators.forEach(function(operator) {
     Object.defineProperty(EventLogger.prototype, operator, {
       configurable: true,
       enumerable: true,
@@ -112,17 +116,22 @@ EventLogger.prototype.operator = function(operators, getter) {
  * @return {Function} getter function to be used in `defineProperty`
  */
 
-function buildLogger (name) {
+function buildLogger(name) {
   /* jshint validthis: true */
   var self = this;
-  var getter = function () {
+  var getter = function() {
     self.events.push(name);
-    var logger = function (/*message*/) {
-      var args = [].slice.call(arguments);
-      args.unshift(self.mode);
-      args.unshift(name);
-      return self.base.apply(self, args);
-    };
+    var logger;
+    if (typeof self.methods[name] === 'function') {
+      logger = self.methods[name];
+    } else {
+      logger = function(/*message*/) {
+        var args = [].slice.call(arguments);
+        args.unshift(self.mode);
+        args.unshift(name);
+        return self.log.apply(self, args);
+      };
+    }
     logger.__proto__ = EventLogger.prototype;
     return logger;
   };
@@ -137,11 +146,11 @@ function buildLogger (name) {
  * @return {Function} getter function to be used in `defineProperty`
  */
 
-function buildMode (mode) {
+function buildMode(mode) {
   /* jshint validthis: true */
   var self = this;
-  var getter = function () {
-    var Mode = function () {};
+  var getter = function() {
+    var Mode = function() {};
     var inst = new Mode();
     inst.__proto__ = EventLogger.prototype;
     self.mode = mode;
