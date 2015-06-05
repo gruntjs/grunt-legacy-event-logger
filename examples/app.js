@@ -71,7 +71,7 @@ app.log.create('write');
 app.log.create('writeln');
 
 // setup listeners
-app.log.methods.forEach(function (method) {
+Object.keys(app.log.methods).forEach(function (method) {
   app.log.on(method, app[method].bind(app));
 });
 
