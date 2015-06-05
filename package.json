@@ -1,12 +1,12 @@
 {
-  "name": "grunt-event-logger",
+  "name": "grunt-legacy-event-logger",
   "description": "Event logger for Grunt legacy libs.",
   "version": "0.1.0",
-  "homepage": "https://github.com/gruntjs/grunt-event-logger",
+  "homepage": "https://github.com/gruntjs/grunt-legacy-event-logger",
   "author": "The Grunt Team (https://github.com/gruntjs)",
-  "repository": "gruntjs/grunt-event-logger",
+  "repository": "gruntjs/grunt-legacy-event-logger",
   "bugs": {
-    "url": "https://github.com/gruntjs/grunt-event-logger/issues"
+    "url": "https://github.com/gruntjs/grunt-legacy-event-logger/issues"
   },
   "license": "MIT",
   "files": [
@@ -19,7 +19,25 @@
   "scripts": {
     "test": "mocha"
   },
+  "dependencies": {
+    "component-emitter": "^1.2.0"
+  },
+  "devDependencies": {
+    "ansi-cyan": "^0.1.1",
+    "ansi-green": "^0.1.1",
+    "ansi-red": "^0.1.1",
+    "ansi-yellow": "^0.1.1",
+    "grunt": "^0.4.5",
+    "grunt-contrib-jshint": "^0.11.2",
+    "grunt-legacy-log": "^0.1.2",
+    "grunt-mocha-test": "^0.12.7",
+    "jshint-stylish": "^2.0.0",
+    "mocha": "^2.2.5",
+    "should": "^6.0.3"
+  },
   "keywords": [
+    "emit",
+    "emitter",
     "event",
     "events",
     "log",
